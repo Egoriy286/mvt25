@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "cmath": "c",
+        "ostream": "c",
+        "atomic": "c",
+        "memory": "c"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
+}
