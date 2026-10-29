@@ -1,0 +1,27 @@
+{
+  "name": "fenics-legacy",
+  "dockerComposeFile": "../compose.yaml",
+  "service": "fenics-legacy",
+  "workspaceFolder": "/workspace/fenics-legacy",
+  "shutdownAction": "stopCompose",
+  "remoteUser": "root",
+  "initializeCommand": ["bash", "${localWorkspaceFolder}/scripts/prepare_fenics.sh"],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy",
+        "ms-toolsai.jupyter",
+        "bertrand-thierry.vscode-gmsh"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/bin/python3",
+        "python.terminal.activateEnvironment": false,
+        "jupyter.notebookFileRoot": "${fileDirname}",
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+  "postCreateCommand": "python3 -m ipykernel install --user --name fenics-legacy --display-name 'Python (FEniCS Legacy)'"
+}

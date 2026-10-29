@@ -1,0 +1,23 @@
+name: mvt25
+
+services:
+  fenics-legacy:
+    image: mvt25/fenics-legacy:local
+    platform: linux/arm64
+    container_name: fenics-legacy
+    hostname: fenics-legacy
+    init: true
+    working_dir: /workspace/fenics-legacy
+    command: sleep infinity
+    volumes:
+      - type: bind
+        source: .
+        target: /workspace/fenics-legacy
+    environment:
+      MPLBACKEND: Agg
+      PYTHONUNBUFFERED: "1"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+    cpus: 4.0
+    mem_limit: 4g
+    shm_size: 512m

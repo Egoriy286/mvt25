@@ -1,0 +1,22 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "FEniCS Legacy: проверить окружение",
+      "type": "process",
+      "command": "python3",
+      "args": ["${workspaceFolder}/scripts/check_fenics.py"],
+      "options": {"cwd": "${workspaceFolder}"},
+      "problemMatcher": []
+    },
+    {
+      "label": "FEniCS Legacy: запустить текущий файл",
+      "type": "process",
+      "command": "python3",
+      "args": ["${file}"],
+      "options": {"cwd": "${fileDirname}"},
+      "problemMatcher": [],
+      "group": {"kind": "build", "isDefault": true}
+    }
+  ]
+}

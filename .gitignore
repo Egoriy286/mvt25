@@ -1,2 +1,24 @@
 .kinopoisk-work
 .venv
+work/
+__pycache__/
+*.pyc
+.DS_Store
+.ipynb_checkpoints/
+
+# FEniCS / Gmsh: результаты расчётов и сгенерированные сетки
+*.pvd
+*.vtu
+*.pvtu
+*.vtk
+*.xdmf
+*.xmf
+*.h5
+*.hdf5
+*.msh
+mesh*.xml
+submesh*.xml
+facets*.xml
+*_physical_region.xml
+*_facet_region.xml
+*.xml.gz

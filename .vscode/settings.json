@@ -1,0 +1,7 @@
+{
+  "jupyter.notebookFileRoot": "${fileDirname}",
+  "files.exclude": {
+    "work": true,
+    "**/__pycache__": true
+  }
+}
