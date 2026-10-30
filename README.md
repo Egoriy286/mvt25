@@ -11,8 +11,10 @@
 | Вычислительный практикум | 5. Transfinite 3D | [lr5.py](ComputationalPractice/laba5/lr5.py), [mesh.geo](ComputationalPractice/laba5/mesh.geo) |
 | Параллельные вычисления | 4. DOLFIN и MPI | [laba4.py](ParallelComputing/laba4/laba4.py), [запустить замеры](ParallelComputing/laba4/run.py) |
 | Методы прикладной математики | 2. Газовая динамика | [laba2.ipynb](AppliedMathematics/laba2/laba2.ipynb) |
+| Методы прикладной математики | 3. Граничные условия | [laba3.ipynb](AppliedMathematics/laba3/laba3.ipynb), [laba3.py](AppliedMathematics/laba3/laba3.py) |
 | Методы прикладной математики | 4. Теплопроводность | [laba4.ipynb](AppliedMathematics/laba4/laba4.ipynb) |
 | Моделирование месторождений | 1. Фильтрация | [laba1.ipynb](HydrocarbonModeling/laba1/laba1.ipynb), [laba1.py](HydrocarbonModeling/laba1/laba1.py) |
+| Моделирование месторождений | 2. Смешанная фильтрация | [laba2.ipynb](HydrocarbonModeling/laba2/laba2.ipynb), [mesh.geo](HydrocarbonModeling/laba2/mesh.geo) |
 
 В notebook всё идёт по порядку: задание → параметры → метод → расчёт → графики → вывод.
 Параметры меняются в первой ячейке. Рядом лежит `.py` с тем же расчётом.

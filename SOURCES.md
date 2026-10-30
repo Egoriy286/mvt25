@@ -23,3 +23,5 @@
 | `HydrocarbonModeling/laba1/materials/pract rabota 1.pdf` | [источник](https://mvt25.mooo.com/assignments/11) | `8dda33282e674cda1a0c9cf41ab6c03e07e04431c1ef90ea1e4cdb26e9055ce7` |
 | `HydrocarbonModeling/laba1/materials/tutorial_part1.pdf` | [источник](https://mvt25.mooo.com/assignments/11) | `81e1c5b51229ff8f2323905b701e5b95277cde603abe7c94aaf809bac891f80f` |
 | `AppliedMathematics/laba1/materials/transport_hopf_gas_original.ipynb` | [источник](https://clck.su/XYGEF) | `c412604191bbf0a2f8518b3300cfabb9f7255c74e12dbf385fb47af85966144d` |
+
+Лабораторная 3 по граничным условиям: фотография прислана пользователем 30.10.2026, сохранена без изменений как `AppliedMathematics/laba3/materials/laba3.jpeg`, SHA-256 `7c65abadbc126b0271a589a3b12823544be5de7350ddd488498053cdaa5b6a1b`. На фотографии нет численных параметров модельной задачи; проверочный пример с точным решением выбран при реализации.
