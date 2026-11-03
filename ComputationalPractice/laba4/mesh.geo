@@ -1,49 +1,18 @@
-// Квадрат 1x1. Грубая сетка n x n, внутри каждой ячейки fine разбиений.
-If (!Exists(n))
-  n = 10;
-EndIf
-If (!Exists(fine))
-  fine = 4;
-EndIf
+// Квадрат 1x1 из n x n блоков с треугольной сеткой шага примерно h.
+SetFactory("OpenCASCADE");
+n = 10;
+fine = 12;
+h = 1/(n*fine);
 
-For j In {0:n}
-  For i In {0:n}
-    Point(1 + j*(n+1) + i) = {i/n, j/n, 0, 1/(n*fine)};
-  EndFor
-EndFor
-
-horizontal[] = {};
-For j In {0:n}
-  For i In {0:n-1}
-    id = newl;
-    Line(id) = {1+j*(n+1)+i, 2+j*(n+1)+i};
-    horizontal[] += {id};
-  EndFor
-EndFor
-
-vertical[] = {};
-For j In {0:n-1}
-  For i In {0:n}
-    id = newl;
-    Line(id) = {1+j*(n+1)+i, 1+(j+1)*(n+1)+i};
-    vertical[] += {id};
-  EndFor
-EndFor
-
-surfaces[] = {};
 For j In {0:n-1}
   For i In {0:n-1}
-    loop = newll;
-    Curve Loop(loop) = {horizontal[j*n+i], vertical[j*(n+1)+i+1],
-                      -horizontal[(j+1)*n+i], -vertical[j*(n+1)+i]};
-    s = news;
-    Plane Surface(s) = {loop};
-    surfaces[] += {s};
+    Rectangle(news) = {i/n, j/n, 0, 1/n, 1/n};
   EndFor
 EndFor
 
-Transfinite Curve{:} = fine + 1;
-Transfinite Surface{:};
-Recombine Surface{:};
+// Соседние блоки используют общие точки и линии.
+Coherence;
+Mesh.MeshSizeMin = h;
+Mesh.MeshSizeMax = h;
 Mesh.MshFileVersion = 2.2;
 Mesh.SaveAll = 1;
