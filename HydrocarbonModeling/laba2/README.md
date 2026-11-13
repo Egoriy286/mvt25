@@ -6,11 +6,11 @@
 
 ## Постановка, соответствующая референсному коду
 
-\[
+$$
 \operatorname{div}u=0,\qquad u=-\frac{k}{\mu}\nabla p,
 \qquad p\big|_{\Gamma_1}=0,
 \qquad p\big|_{\Gamma_{2,L}}=p\big|_{\Gamma_{2,R}}=1.
-\]
+$$
 
 Область — прямоугольник [0, 2] × [0, 1] с двумя вырезанными скважинами
 радиуса 0,02. Центры (0,5; 0,5) и (1,5; 0,5) выбраны по рисунку задания.
@@ -32,16 +32,16 @@
 пара RT₀–DG₀: `FiniteElement('RT', triangle, 1)` в нумерации DOLFIN и
 `FiniteElement('DG', triangle, 0)`.
 
-\[
+$$
 a((u,p),(v,q))=\int_\Omega\frac{\mu}{k}u\cdot v\,dx
 -\int_\Omega p\,\operatorname{div}v\,dx
 +\int_\Omega q\,\operatorname{div}u\,dx,
-\]
+$$
 
-\[
+$$
 \ell(v,q)=-\sum_{i=L,R}p_{w,i}\int_{\Gamma_{2,i}}v\cdot n\,ds
 -p_{\rm out}\int_{\Gamma_1}v\cdot n\,ds.
-\]
+$$
 
 При p_out = 0 последний интеграл равен нулю — как в референсе.
 `DirichletBC` для скорости не задаётся. Седловая линейная система решается
@@ -80,10 +80,10 @@ DOLFIN читает `mesh.xml` и физические метки из `mesh_fac
 
 За эталон принято решение на мелкой сетке:
 
-\[
+$$
 E_p=\|p_H-p_h\|_{L^2(\Omega)},\qquad
 E_u=\left(\int_\Omega|u_H-u_h|^2\,dx\right)^{1/2}.
-\]
+$$
 
 Относительные нормы: E_p / ‖p_h‖_L² и E_u / ‖u_h‖_L².
 RMS — соответствующая абсолютная норма, делённая на √|Ω|.
