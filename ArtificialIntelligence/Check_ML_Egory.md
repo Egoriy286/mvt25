@@ -61,8 +61,8 @@ w = w - step * grad
 
 | Тип | Название | Формула |
 |---|---|---|
-| L1 | Lasso | \(+\lambda \sum |w|\) |
-| L2 | Ridge | \(+\lambda \sum w^2\) |
+| L1 | Lasso | $+\lambda \sum \lvert w\rvert$ |
+| L2 | Ridge | $+\lambda \sum w^2$ |
 
 ### Pipeline
 

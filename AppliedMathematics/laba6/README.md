@@ -4,11 +4,15 @@
 
 Постановка с фотографии `IMG_2528.HEIC`, присланной 06.11.2026:
 
-$$u_t+e^{-bt^2}u_x=0,\qquad u(x,0)=e^{-ax^2},\qquad 0<x<\ell,\quad 0<t\le T.$$
+$$
+u_t+e^{-bt^2}u_x=0,\qquad u(x,0)=e^{-ax^2},\qquad 0<x<\ell,\quad 0<t\le T.
+$$
 
 На характеристиках $dx/dt=e^{-bt^2}$, $du/dt=0$. Обозначим
 
-$$S(t)=\int_0^t e^{-bs^2}\,ds=\frac{\sqrt\pi}{2\sqrt b}\operatorname{erf}(\sqrt b\,t),\quad b>0.$$
+$$
+S(t)=\int_0^t e^{-bs^2}\,ds=\frac{\sqrt\pi}{2\sqrt b}\operatorname{erf}(\sqrt b\,t),\quad b>0.
+$$
 
 Тогда $x_0=x-S(t)$ и $u(x,t)=\exp[-a(x-S(t))^2]$. При $b=0$ используется $S(t)=t$.
 В случае переменной скорости сдвиг нельзя заменять на $t v(t)$ или просто $v(t)$.
