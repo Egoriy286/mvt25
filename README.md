@@ -13,6 +13,8 @@
 | Методы прикладной математики | 2. Газовая динамика | [laba2.ipynb](AppliedMathematics/laba2/laba2.ipynb) |
 | Методы прикладной математики | 3. Граничные условия | [laba3.ipynb](AppliedMathematics/laba3/laba3.ipynb), [laba3.py](AppliedMathematics/laba3/laba3.py) |
 | Методы прикладной математики | 4. Теплопроводность | [laba4.ipynb](AppliedMathematics/laba4/laba4.ipynb) |
+| Методы прикладной математики | 5. Теплопроводность с переносом | [laba5.ipynb](AppliedMathematics/laba5/laba5.ipynb), [laba5.py](AppliedMathematics/laba5/laba5.py) |
+| Методы прикладной математики | 6. Перенос методом характеристик | [laba6.ipynb](AppliedMathematics/laba6/laba6.ipynb), [laba6.py](AppliedMathematics/laba6/laba6.py) |
 | Моделирование месторождений | 1. Фильтрация | [laba1.ipynb](HydrocarbonModeling/laba1/laba1.ipynb), [laba1.py](HydrocarbonModeling/laba1/laba1.py) |
 | Моделирование месторождений | 2. Смешанная фильтрация | [laba2.ipynb](HydrocarbonModeling/laba2/laba2.ipynb), [mesh.geo](HydrocarbonModeling/laba2/mesh.geo) |
 

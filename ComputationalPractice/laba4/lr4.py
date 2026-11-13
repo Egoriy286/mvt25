@@ -34,39 +34,20 @@ for cell in cells(mesh):
 File('results/blocks.pvd') << domains
 
 # Сохраняем пары: подсетка и метки её границы.
-class Square(SubDomain):
-    def __init__(self, i, j, n):
-        super().__init__()
-        self.xmin, self.xmax = i/n, (i+1)/n
-        self.ymin, self.ymax = j/n, (j+1)/n
-
-    def inside(self, x, on_boundary):
-        return (
-            between(x[0], (self.xmin, self.xmax))
-            and between(x[1], (self.ymin, self.ymax))
-        )
-
-
-class Boundary(SubDomain):
-    def inside(self, x, on_boundary):
-        return on_boundary
-
-
-Path('results/submeshes_2').mkdir(parents=True, exist_ok=True)
+Path('results/submeshes').mkdir(parents=True, exist_ok=True)
 
 submeshes = []
-submesh_file =File(f'results/submeshes_2/submesh.pvd')
-facets_file = File(f'results/submeshes_2/facet.pvd')
+submesh_file =File(f'results/submeshes/submesh.pvd')
+facets_file = File(f'results/submeshes/facet.pvd')
 for j in range(n):
     for i in range(n):
-        domain = Square(i, j, n)
-        submesh = SubMesh(mesh, domain)
+        number = i + n*j
+        submesh = SubMesh(mesh, domains, number)
 
         facets = MeshFunction('size_t', submesh, 1, 0)
-        Boundary().mark(facets, 1)
+        AutoSubDomain(lambda x, on_boundary: on_boundary).mark(facets, 1)
 
         submeshes.append((submesh, facets))
-        number = i + n*j
         submesh_file  << submesh
         facets_file << facets
 
