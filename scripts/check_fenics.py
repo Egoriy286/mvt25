@@ -13,11 +13,18 @@ import gmsh
 import ipykernel
 import meshio
 import numpy as np
+import pandas as pd
+import scipy
+import petsc4py
+import slepc4py
+import h5py
 from mpi4py import MPI
 
 
 def main():
     comm = MPI.COMM_WORLD
+    if not df.__version__.startswith("2019."):
+        raise RuntimeError("Expected FEniCS 2019, got {}".format(df.__version__))
     mesh = df.UnitSquareMesh(df.MPI.comm_world, 8, 8)
     space = df.FunctionSpace(mesh, "Lagrange", 1)
     exact = df.Expression("x[0] + 2*x[1]", degree=1)
@@ -43,6 +50,10 @@ def main():
         print("Jupyter kernel: {}; debugpy: {}".format(
             ipykernel.__version__, debugpy.__version__))
         print("meshio: {}".format(meshio.__version__))
+        print("NumPy: {}; SciPy: {}; pandas: {}".format(
+            np.__version__, scipy.__version__, pd.__version__))
+        print("PETSc: {}; SLEPc: {}; HDF5: {}".format(
+            petsc4py.__version__, slepc4py.__version__, h5py.__version__))
         print("Poisson L2 error: {:.3e}".format(l2_error))
         print("FEniCS Legacy: OK")
 

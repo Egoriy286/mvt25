@@ -12,3 +12,7 @@ RUN python3 -m ipykernel install --sys-prefix --name fenics-legacy \
     --display-name "Python (FEniCS Legacy)"
 
 WORKDIR /workspace/fenics-legacy
+
+# Used by the lab notebooks; retain NumPy from the FEniCS base image.
+RUN python3 -m pip install --no-cache-dir pandas==1.5.3 \
+    && python3 -m pip check

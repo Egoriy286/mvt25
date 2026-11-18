@@ -24,6 +24,25 @@
 
 ## Как запустить
 
+### Локальное окружение uv (macOS)
+
+```bash
+uv sync
+uv run jupyter lab
+```
+
+В `.venv` установлены зависимости Python-файлов и notebooks: NumPy, SciPy,
+pandas, Matplotlib, scikit-learn, seaborn, Pillow, tqdm, TensorFlow/Keras,
+Gmsh, meshio, h5py, Jupyter и debugpy. Версии закреплены в `uv.lock`.
+Для локальных notebooks выбрать интерпретатор `.venv/bin/python`.
+
+Работы с `dolfin` и `mpi4py` запускать в Docker по инструкции ниже:
+FEniCS 2019 использует отдельный Python и системные библиотеки контейнера.
+Примеры с `pycuda` в `Helpers/lab6` требуют NVIDIA GPU и CUDA;
+на этом Mac с Apple Silicon они не запускаются.
+
+### Окружение Docker с FEniCS
+
 1. Открыть эту папку в VS Code и выбрать **Dev Containers: Reopen in Container**.
 2. Открыть нужный notebook из таблицы, выбрать ядро **Python (FEniCS Legacy)** и нажать **Run All**.
 3. Для `.py` открыть файл и нажать `Cmd+Shift+B`: запуск идёт из папки файла. Для MPI команды указаны в [README работы](ParallelComputing/laba4/README.md).

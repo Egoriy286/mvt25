@@ -11,7 +11,7 @@
 - В базе DOLFIN `2019.2.0.dev0`; это Legacy API `import dolfin`,
   совместимость конкретных старых работ проверяется отдельно.
 - Дополнительно установлены ipykernel `6.29.5`, debugpy `1.8.14`,
-  nbformat `5.10.4` и nbclient `0.10.2`.
+  nbformat `5.10.4`, nbclient `0.10.2` и pandas `1.5.3`.
 
 Расчётные зависимости устанавливаются в Docker-образ. Файлы проекта подключены
 через bind mount: изменения из VS Code и контейнера сохраняются в одной
@@ -20,7 +20,7 @@
 
 ## Открыть проект
 
-1. Запустить Docker Desktop.
+1. Запустить OrbStack или Docker Desktop.
 2. Открыть `/Users/egoriy/Desktop/mvt25` в VS Code.
 3. Нажать `Cmd+Shift+P` → **Dev Containers: Reopen in Container**.
 4. Дождаться подключения; слева внизу появится **Dev Container: fenics-legacy**.
@@ -79,6 +79,8 @@ docker compose up -d
 docker exec -it fenics-legacy bash
 ```
 
+Сборка и запуск одной командой: `docker compose up -d --build`.
+
 Остановить вычислительное окружение, сохранив контейнер и файлы:
 
 ```bash
@@ -101,7 +103,7 @@ Gmsh доступен для генерации сеток; графическо
 - [Работа в Dev Containers](https://code.visualstudio.com/docs/devcontainers/containers).
 - [Настройка окружения VS Code](https://code.visualstudio.com/docs/devcontainers/create-dev-container).
 
-## Проверено 29.10.2026
+## Проверено 16.11.2026
 
 - DOLFIN `2019.2.0.dev0`, Gmsh `4.12.2`, mpi4py `3.1.6`, Python `3.10.12`.
 - Задача Пуассона: L2-ошибка `3.210e-16` на одном процессе,

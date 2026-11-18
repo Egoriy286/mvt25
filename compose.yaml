@@ -3,6 +3,8 @@ name: mvt25
 services:
   fenics-legacy:
     image: mvt25/fenics-legacy:local
+    build:
+      context: .devcontainer
     platform: linux/arm64
     container_name: fenics-legacy
     hostname: fenics-legacy
