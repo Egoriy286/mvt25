@@ -6,8 +6,9 @@
 # Неявная схема, прогонка внутри цикла; своих функций нет.
 
 import numpy as np; import matplotlib.pyplot as plt
-from pathlib import Path
-out = Path(__file__).resolve().parent/'results/laba4-1'; out.mkdir(parents=True,exist_ok=True)
+from reporting import RESULTS_DIR, snapshot_steps, write_summary
+out = RESULTS_DIR / 'laba4-1'
+out.mkdir(parents=True, exist_ok=True)
 d = np.array([0.05,0.25,0.05,0.01]); lam = np.array([0.04,0.7,0.04,0.049])
 rho = np.array([30.,1800.,30.,40.]); c = np.array([1400.,840.,1400.,1950.])
 T_left, T_right, T0 = 20., -50., -50.; N = 20; T = 7*24*3600; M = 1008; tau = T/M
@@ -39,12 +40,15 @@ print('Стыки, °C:',u_stationary[np.arange(1,len(d))*N]); print('Ошибк
 print('Отклонение от стационара через 7 суток, °C:',max(abs(u[-1]-u_stationary)))
 assert balance.max() < 1e-7 and error < 1e-8
 assert u.min() >= T_right-1e-8 and u.max() <= T_left+1e-8
-np.savez(out/'heat.npz',x=x,t=t,u=u,q1=q1,q2=q2,balance=balance,stationary=u_stationary,d=d,lam=lam,rho=rho,c=c)
-np.savetxt(out/'temperature.csv',np.column_stack([x,u[0],u[6],u[36],u[144],u[-1],u_stationary]),delimiter=',',header='x,t0,t1h,t6h,t24h,t168h,stationary',comments='')
-np.savetxt(out/'flux.csv',np.column_stack([t[1:],q1,q2]),delimiter=',',header='time_s,q_left,q_right',comments='')
+write_summary(
+    out, layers=('пенопласт', 'кирпич', 'пенопласт', 'пенофол'), d=d, N=N, t=t, u=u,
+    q_left=q1, q_right=q2, capacity=C, T0=T0, T_out=T_right,
+    u_stationary=u_stationary, q_stationary=q_stationary,
+    stationary_error=error, balance_error=balance.max(),
+)
 
 fig, ax = plt.subplots(1,2,figsize=(12,4))
-for j in [0,6,36,144,M]: ax[0].plot(x,u[j],label=f't = {t[j]/3600:g} ч')
+for j in [0, *snapshot_steps(t)]: ax[0].plot(x,u[j],label=f't = {t[j]/3600:g} ч')
 ax[0].plot(x,u_stationary,'k--',label='Стационарное'); ax[0].set(xlabel='x, м',ylabel='Температура, °C')
 for border in borders[1:-1]: ax[0].axvline(border,color='gray',linestyle=':',alpha=0.5)
 ax[1].plot(t[1:]/3600,q1,label='Слева'); ax[1].plot(t[1:]/3600,q2,label='Справа')

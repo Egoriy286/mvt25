@@ -12,9 +12,10 @@
 # %%
 import numpy as np
 import matplotlib.pyplot as plt
-from pathlib import Path
+from reporting import RESULTS_DIR, snapshot_steps, write_summary
 
-Path('results').mkdir(exist_ok=True)
+out = RESULTS_DIR
+out.mkdir(parents=True, exist_ok=True)
 d = np.array([0.05, 0.25, 0.05])
 lam = np.array([0.04, 0.7, 0.04])
 rho = np.array([30., 1800., 30.])
@@ -104,27 +105,28 @@ rhs = np.zeros(3*N-1)
 rhs[0] = G[0] * T_left
 rhs[-1] = G[-1] * T_right
 u_check = progonka(-G[1:-1], G[:-1]+G[1:], -G[1:-1], rhs)
+error = np.max(abs(u_check - u_stationary[1:-1]))
 print('Стационарный поток:', q_stationary, 'Вт/м²')
 print('Температуры на стыках:', u_stationary[N], u_stationary[2*N])
-print('Ошибка стационарного решения:', max(abs(u_check-u_stationary[1:-1])))
+print('Ошибка стационарного решения:', error)
 print('Максимальная ошибка баланса:', balance.max())
 print('Пределы температуры:', u.min(), u.max())
 assert balance.max() < 1e-7
-assert max(abs(u_check-u_stationary[1:-1])) < 1e-8
+assert error < 1e-8
 assert u.min() >= T_right-1e-8 and u.max() <= T_left+1e-8
-np.savez('results/heat.npz', x=x, t=t, u=u, q1=q1, q2=q2,
-         balance=balance, stationary=u_stationary)
-np.savetxt('results/temperature.csv', np.column_stack([x, u[0], u[6], u[36], u[144], u[-1], u_stationary]),
-           delimiter=',', header='x,t0,t1h,t6h,t24h,t168h,stationary', comments='')
-np.savetxt('results/flux.csv', np.column_stack([t[1:],q1,q2]),
-           delimiter=',', header='time_s,q_left,q_right', comments='')
+write_summary(
+    out, layers=('пенопласт', 'кирпич', 'пенопласт'), d=d, N=N, t=t, u=u,
+    q_left=q1, q_right=q2, capacity=C, T0=T0, T_out=T_right,
+    u_stationary=u_stationary, q_stationary=q_stationary,
+    stationary_error=error, balance_error=balance.max(),
+)
 
 # %% [markdown]
 # ### Визуализация решения
 
 # %%
 fig, ax = plt.subplots(1, 2, figsize=(12, 4))
-for j in [0, 6, 36, 144, M]:
+for j in [0, *snapshot_steps(t)]:
     ax[0].plot(x, u[j], label=f't = {t[j]/3600:g} ч')
 ax[0].plot(x, u_stationary, 'k--', label='Стационарное')
 ax[0].set(xlabel='x, м', ylabel='Температура, °C')
@@ -136,7 +138,7 @@ for a in ax:
     a.legend(fontsize=8)
     a.grid(alpha=0.3)
 plt.tight_layout()
-plt.savefig('results/heat.png', dpi=150)
+plt.savefig(out / 'heat.png', dpi=150)
 plt.show()
 
 # %% [markdown]

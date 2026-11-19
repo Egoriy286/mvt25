@@ -5,8 +5,9 @@
 # Неявная схема, прогонка внутри цикла; своих функций нет.
 
 import numpy as np; import matplotlib.pyplot as plt
-from pathlib import Path
-out = Path('results/compressed'); out.mkdir(parents=True,exist_ok=True)
+from reporting import RESULTS_DIR, snapshot_steps, write_summary
+out = RESULTS_DIR / 'compressed'
+out.mkdir(parents=True, exist_ok=True)
 d = np.array([0.05,0.25,0.05]); lam = np.array([0.04,0.7,0.04]); rho = np.array([30.,1800.,30.]); c = np.array([1400.,840.,1400.])
 T_left, T_right, T0 = 20., -50., -50.; N = 20; T = 7*24*3600; M = 1008; tau = T/M
 borders = np.r_[0,np.cumsum(d)]
@@ -31,17 +32,21 @@ for j in range(M):
 q_stationary = (T_left-T_right)/np.sum(d/lam); resistance = np.r_[0,np.cumsum(1/G)]; u_stationary = T_left-q_stationary*resistance
 A = np.diag(G[:-1]+G[1:])+np.diag(-G[1:-1],1)+np.diag(-G[1:-1],-1)
 rhs = np.zeros(n); rhs[0] = G[0]*T_left; rhs[-1] = G[-1]*T_right; u_check = np.linalg.solve(A,rhs)
+error = np.max(abs(u_check - u_stationary[1:-1]))
 print('Стационарный поток:',q_stationary,'Вт/м²; температуры стыков:',u_stationary[N],u_stationary[2*N])
-print('Ошибка стационарного решения:',max(abs(u_check-u_stationary[1:-1])),'; баланса:',balance.max())
-assert balance.max() < 1e-7 and max(abs(u_check-u_stationary[1:-1])) < 1e-8
+print('Ошибка стационарного решения:',error,'; баланса:',balance.max())
+assert balance.max() < 1e-7 and error < 1e-8
 assert u.min() >= T_right-1e-8 and u.max() <= T_left+1e-8
-np.savez(out/'heat.npz',x=x,t=t,u=u,q1=q1,q2=q2,balance=balance,stationary=u_stationary)
-np.savetxt(out/'temperature.csv',np.column_stack([x,u[0],u[6],u[36],u[144],u[-1],u_stationary]),delimiter=',',header='x,t0,t1h,t6h,t24h,t168h,stationary',comments='')
-np.savetxt(out/'flux.csv',np.column_stack([t[1:],q1,q2]),delimiter=',',header='time_s,q_left,q_right',comments='')
+write_summary(
+    out, layers=('пенопласт', 'кирпич', 'пенопласт'), d=d, N=N, t=t, u=u,
+    q_left=q1, q_right=q2, capacity=C, T0=T0, T_out=T_right,
+    u_stationary=u_stationary, q_stationary=q_stationary,
+    stationary_error=error, balance_error=balance.max(),
+)
 
 
 fig, ax = plt.subplots(1,2,figsize=(12,4))
-for j in [0,6,36,144,M]: ax[0].plot(x,u[j],label=f't = {t[j]/3600:g} ч')
+for j in [0, *snapshot_steps(t)]: ax[0].plot(x,u[j],label=f't = {t[j]/3600:g} ч')
 ax[0].plot(x,u_stationary,'k--',label='Стационарное'); ax[0].set(xlabel='x, м',ylabel='Температура, °C')
 ax[1].plot(t[1:]/3600,q1,label='Слева'); ax[1].plot(t[1:]/3600,q2,label='Справа')
 ax[1].axhline(q_stationary,color='black',linestyle='--',label='Стационарный поток'); ax[1].set(xlabel='Время, ч',ylabel='Поток по +x, Вт/м²')
