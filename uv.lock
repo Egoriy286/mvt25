@@ -1306,16 +1306,28 @@ wheels = [
 [[package]]
 name = "laba4"
 version = "0.1.0"
-source = { editable = "ArtificialIntelligence/laba4" }
+source = { virtual = "ArtificialIntelligence/laba4" }
 dependencies = [
+    { name = "ipykernel" },
+    { name = "jupyterlab" },
     { name = "keras" },
     { name = "matplotlib" },
+    { name = "numpy" },
+    { name = "pandas" },
+    { name = "scikit-learn" },
+    { name = "tensorflow" },
 ]
 
 [package.metadata]
 requires-dist = [
+    { name = "ipykernel", specifier = ">=7.4.0" },
+    { name = "jupyterlab", specifier = ">=4.6.6" },
     { name = "keras", specifier = ">=3.15.1" },
     { name = "matplotlib", specifier = ">=3.11.2" },
+    { name = "numpy", specifier = ">=2.5.4" },
+    { name = "pandas", specifier = ">=3.1.1" },
+    { name = "scikit-learn", specifier = ">=1.9.1" },
+    { name = "tensorflow", specifier = ">=2.20.0" },
 ]
 
 [[package]]

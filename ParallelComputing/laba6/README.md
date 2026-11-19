@@ -1,21 +1,23 @@
-# Laba 6
+# Практическая работа 6. Метод Якоби
 
-## Requirements
+Программа генерирует систему линейных уравнений с диагональным преобладанием и решает её методом Якоби. [Условие работы](Практика%206.pdf) · [Установка MPI](../INSTALL.md)
 
-Install a C++ compiler and an MPI implementation (for example, Open MPI). The MPI compiler wrapper `mpic++` and launcher `mpirun` must be available on your `PATH`.
+## Сборка и запуск
 
-## Compile
-
-From this directory, compile the project's C++ source file. Replace `source.cpp` with the actual source filename; include any additional project source files in the command if needed.
+Из папки `ParallelComputing/laba6` соберите программу как C++ и запустите её на четырёх процессах.
 
 ```bash
-mpicc laba6.c -o laba6
+mpicxx -x c++ laba6.c -o laba6
+mpirun -n 4 ./laba6 8
 ```
 
-## Run
+Аргумент `8` задаёт порядок матрицы и должен быть кратен числу процессов. Каждый запуск перезаписывает `A.txt`, `b.txt` и `x.txt` в рабочей папке. При запуске на нескольких процессах используйте решение из терминала. Все процессы открывают `x.txt` на запись, поэтому файл может оказаться пустым.
 
-Launch the compiled program with the desired number of processes. For example, to use four processes:
+## Проверка решения
+
+Запустите расчёт на одном процессе, затем выполните `eval.py` с установленным NumPy. Скрипт выведет разность между решением NumPy и результатом метода Якоби.
 
 ```bash
-mpirun -np 4 ./laba6
+mpirun -n 1 ./laba6 8
+python3 eval.py
 ```

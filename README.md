@@ -1,53 +1,56 @@
 # mvt25
 
-Учебные работы. Рабочая папка: `/Users/egoriy/Desktop/mvt25`.
+Лабораторные и практические работы по численным методам, параллельным вычислениям и машинному обучению. В репозитории собраны исходники, ноутбуки Jupyter, условия задач и результаты расчётов.
 
-## Что открыть
+## Дисциплины
 
-| Дисциплина | Задание | Основной файл |
-|---|---|---|
-| Искусственный интеллект | 3. Градиентный спуск | [laba3.ipynb](ArtificialIntelligence/laba3/laba3.ipynb) |
-| Вычислительный практикум | 4. Transfinite 2D | [lr4.py](ComputationalPractice/laba4/lr4.py), [mesh.geo](ComputationalPractice/laba4/mesh.geo) |
-| Вычислительный практикум | 5. Transfinite 3D | [lr5.py](ComputationalPractice/laba5/lr5.py), [mesh.geo](ComputationalPractice/laba5/mesh.geo) |
-| Параллельные вычисления | 4. DOLFIN и MPI | [laba4.py](ParallelComputing/laba4/laba4.py), [запустить замеры](ParallelComputing/laba4/run.py) |
-| Методы прикладной математики | 2. Газовая динамика | [laba2.ipynb](AppliedMathematics/laba2/laba2.ipynb) |
-| Методы прикладной математики | 3. Граничные условия | [laba3.ipynb](AppliedMathematics/laba3/laba3.ipynb), [laba3.py](AppliedMathematics/laba3/laba3.py) |
-| Методы прикладной математики | 4. Теплопроводность | [laba4.ipynb](AppliedMathematics/laba4/laba4.ipynb) |
-| Методы прикладной математики | 5. Теплопроводность с переносом | [laba5.ipynb](AppliedMathematics/laba5/laba5.ipynb), [laba5.py](AppliedMathematics/laba5/laba5.py) |
-| Методы прикладной математики | 6. Перенос и уравнение Хопфа | [laba6.ipynb](AppliedMathematics/laba6/laba6.ipynb), [laba6.py](AppliedMathematics/laba6/laba6.py) |
-| Моделирование месторождений | 1. Фильтрация | [laba1.ipynb](HydrocarbonModeling/laba1/laba1.ipynb), [laba1.py](HydrocarbonModeling/laba1/laba1.py) |
-| Моделирование месторождений | 2. Смешанная фильтрация | [laba2.ipynb](HydrocarbonModeling/laba2/laba2.ipynb), [mesh.geo](HydrocarbonModeling/laba2/mesh.geo) |
+| Раздел | Работы |
+| --- | --- |
+| [Методы решения задач прикладной математики](AppliedMathematics/README.md) | [Газовая динамика](AppliedMathematics/laba2/README.md) (конечные разности и МКЭ на подвижной сетке), [граничные условия](AppliedMathematics/laba3/README.md), [теплопроводность](AppliedMathematics/laba4/README.md), [теплопроводность с переносом](AppliedMathematics/laba5/README.md), [метод характеристик](AppliedMathematics/laba6/README.md) |
+| [Параллельные вычисления](ParallelComputing/README.md) | [Замеры DOLFIN и MPI](ParallelComputing/laba4/README.md), [метод Якоби](ParallelComputing/laba6/README.md), [сравнение конечных разностей и МКЭ](ParallelComputing/laba7/README.md) |
+| [Вычислительный практикум](ComputationalPractice/README.md) | [Сетки Transfinite 2D](ComputationalPractice/laba4/README.md) и [3D](ComputationalPractice/laba5/README.md), [подобласти вокруг вершин](ComputationalPractice/laba6/README.md) |
+| [Моделирование углеводородных месторождений](HydrocarbonModeling/README.md) | [Фильтрация](HydrocarbonModeling/laba1/README.md), [смешанная задача фильтрации](HydrocarbonModeling/laba2/README.md) |
+| [Искусственный интеллект](ArtificialIntelligence/README.md) | [Наивный Байес](ArtificialIntelligence/Наивный_Байес_Egory.ipynb), [градиентный спуск](ArtificialIntelligence/laba3/README.md) |
 
-В notebook всё идёт по порядку: задание → параметры → метод → расчёт → графики → вывод.
-Параметры меняются в первой ячейке. Рядом лежит `.py` с тем же расчётом.
-В сеточных работах геометрия и Python-файл лежат рядом, как в работах 1–3.
+## Быстрый старт
 
-## Как запустить
+Команды ниже выполняются из корня репозитория.
 
-### Локальное окружение uv (macOS)
+### Python и Jupyter
+
+Создайте окружение Python 3.12 и запустите JupyterLab. Версии зависимостей закреплены в `uv.lock`. [Установка uv](https://docs.astral.sh/uv/getting-started/installation/)
 
 ```bash
-uv sync
+uv sync --locked
 uv run jupyter lab
 ```
 
-В `.venv` установлены зависимости Python-файлов и notebooks: NumPy, SciPy,
-pandas, Matplotlib, scikit-learn, seaborn, Pillow, tqdm, TensorFlow/Keras,
-Gmsh, meshio, h5py, Jupyter и debugpy. Версии закреплены в `uv.lock`.
-Для локальных notebooks выбрать интерпретатор `.venv/bin/python`.
+В JupyterLab откройте ноутбук выбранной работы и выполните **Run All**. В VS Code для локальных расчётов используйте интерпретатор из `.venv`.
 
-Работы с `dolfin` и `mpi4py` запускать в Docker по инструкции ниже:
-FEniCS 2019 использует отдельный Python и системные библиотеки контейнера.
-Примеры с `pycuda` в `Helpers/lab6` требуют NVIDIA GPU и CUDA;
-на этом Mac с Apple Silicon они не запускаются.
+### C/C++ и MPI
 
-### Окружение Docker с FEniCS
+Установите компилятор и MPI по [инструкции](ParallelComputing/INSTALL.md). Для первого запуска соберите лабораторную № 1 и передайте сообщение по цепочке из четырёх процессов.
 
-1. Открыть эту папку в VS Code и выбрать **Dev Containers: Reopen in Container**.
-2. Открыть нужный notebook из таблицы, выбрать ядро **Python (FEniCS Legacy)** и нажать **Run All**.
-3. Для `.py` открыть файл и нажать `Cmd+Shift+B`: запуск идёт из папки файла. Для MPI команды указаны в [README работы](ParallelComputing/laba4/README.md).
+```bash
+mpicc -O2 ParallelComputing/laba1/laba1.c -o /tmp/mvt25-laba1
+mpirun -n 4 /tmp/mvt25-laba1
+```
 
-Результаты каждой работы — в её папке `results/`. Файлы `.pvd` открываются в ParaView.
-Оригинальные задания и твои notebooks — в `materials/`.
+Команды для остальных работ собраны в [разделе параллельных вычислений](ParallelComputing/README.md).
 
-[Настройка Docker](FENICS.md) · [План работ](PLAN.md) · [Проверки](VERIFICATION.md) · [Источники](SOURCES.md).
+### FEniCS Legacy и Gmsh
+
+Для работ с `dolfin` и его Python-окружением используйте Docker. Конфигурация проекта рассчитана на `linux/arm64`.
+
+```bash
+docker compose up -d --build
+docker compose exec -T fenics-legacy python3 scripts/check_fenics.py
+```
+
+В VS Code доступен запуск через **Dev Containers: Reopen in Container** с ядром **Python (FEniCS Legacy)**. [Настройка FEniCS, MPI и отладки](FENICS.md)
+
+## Материалы и результаты
+
+Условия и исходные примеры хранятся рядом с работами, часто в `materials/`. Графики и данные расчётов обычно сохраняются в `results/`. Файлы `.pvd` можно открыть в ParaView.
+
+[Источники](SOURCES.md) · [Проверки](VERIFICATION.md) · [План работ](PLAN.md) · [Лицензия MIT](LICENSE)

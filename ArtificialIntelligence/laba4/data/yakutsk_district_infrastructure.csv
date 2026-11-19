@@ -1,0 +1,9 @@
+﻿district,median_school_distance_m,median_kindergarten_distance_m,median_healthcare_distance_m,median_bus_stop_distance_m,school_within_500m_share,kindergarten_within_500m_share,healthcare_within_1000m_share,transport_accessibility_300m_share,source_url
+Центральный,240,330,330,110,0.88,0.80,1.00,0.99,https://relocat.io/city/yakutsk/districts/tsentralnyy/
+Губинский,230,160,540,120,0.97,1.00,0.98,1.00,https://relocat.io/city/yakutsk/districts/gubinskiy/
+Октябрьский,250,170,230,110,0.80,0.95,1.00,1.00,https://relocat.io/city/yakutsk/districts/oktyabrskiy/
+Строительный,420,270,590,150,0.60,0.83,0.76,0.93,https://relocat.io/city/yakutsk/districts/stroitelnyy/
+Сайсарский,460,700,700,150,0.55,0.37,0.78,0.90,https://relocat.io/city/yakutsk/districts/saysarskiy/
+Промышленный,360,810,1400,140,0.65,0.41,0.45,0.92,https://relocat.io/city/yakutsk/districts/promyshlennyy/
+Автодорожный,370,2200,890,140,0.62,0.06,0.60,0.96,https://relocat.io/city/yakutsk/districts/avtodorozhnyy/
+Гагаринский,280,510,720,160,0.68,0.48,0.64,0.78,https://relocat.io/city/yakutsk/districts/gagarinskiy/

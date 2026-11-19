@@ -1,107 +1,126 @@
 #include <mpi.h>
+#include <errno.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 // Функция умножения локальной части матрицы
-void multiply(int *local_A, int *B, int *local_C, int rows, int M, int K) {
+static void multiply(const int *local_A, const int *B, int *local_C, int rows, int N) {
     for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < K; j++) {
-            local_C[i * K + j] = 0;
-            for (int k = 0; k < M; k++) {
-                local_C[i * K + j] += local_A[i * M + k] * B[k * K + j];
+        for (int j = 0; j < N; j++) {
+            int sum = 0;
+            for (int k = 0; k < N; k++) {
+                sum += local_A[i * N + k] * B[k * N + j];
             }
+            local_C[i * N + j] = sum;
         }
     }
 }
 
+static int save_matrix(const char *name, const int *matrix, int N) {
+    FILE *file = fopen(name, "w");
+    if (!file) {
+        perror(name);
+        return 0;
+    }
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            fprintf(file, "%d%c", matrix[i * N + j], j + 1 == N ? '\n' : ' ');
+        }
+    }
+    int write_error = ferror(file);
+    if (fclose(file) != 0 || write_error) {
+        fprintf(stderr, "Не удалось записать %s.\n", name);
+        return 0;
+    }
+    return 1;
+}
+
 int main(int argc, char *argv[]) {
     int rank, size;
-    int N = 4, M = 4, K = 4; // Размеры матриц
-
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    if (N % size != 0) {
+    int N = 0;
+    if (rank == 0 && argc == 2) {
+        char *end;
+        errno = 0;
+        long length = strtol(argv[1], &end, 10);
+        if (errno == 0 && *end == '\0' && length > 0 && length <= INT_MAX / length) {
+            N = (int)length;
+        }
+    }
+    MPI_Bcast(&N, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    if (N == 0) {
         if (rank == 0) {
-            printf("Число строк матрицы A должно делиться на количество процессов!\n");
+            fprintf(stderr, "Запуск: %s N, где N > 0 и N * N <= %d.\n", argv[0], INT_MAX);
         }
         MPI_Finalize();
-        return 0;
+        return EXIT_FAILURE;
     }
 
-    int rows_per_proc = N / size; // Число строк на процесс
+    int rows_per_proc = N / size;
+    int extra_rows = N % size;
+    int rows = rows_per_proc + (rank < extra_rows);
+    int local_count = rows * N;
+    int count = N * N;
 
-    // Выделяем память для локальных частей
-    int *local_A = (int *)malloc(rows_per_proc * M * sizeof(int));
-    int *B = (int *)malloc(M * K * sizeof(int));
-    int *local_C = (int *)malloc(rows_per_proc * K * sizeof(int));
-
-    // Инициализация матриц A и B в процессе 0
-    int *A = NULL;
-    int *C = NULL;
+    // Выделяем хотя бы один элемент и на процессах без строк.
+    int *local_A = calloc(local_count ? local_count : 1, sizeof(*local_A));
+    int *local_C = calloc(local_count ? local_count : 1, sizeof(*local_C));
+    int *B = calloc(count, sizeof(*B));
+    int *A = NULL, *C = NULL, *counts = NULL, *offsets = NULL;
     if (rank == 0) {
-        A = (int *)malloc(N * M * sizeof(int));
-        C = (int *)malloc(N * K * sizeof(int));
-        // Заполняем матрицы A и B
-        for (int i = 0; i < N * M; i++) {
-            A[i] = i + 1; // Пример заполнения матрицы A
-        }
-        for (int i = 0; i < M * K; i++) {
-            B[i] = i + 1; // Пример заполнения матрицы B
-        }
-        printf("Матрица A:\n");
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < K; j++) {
-                printf("%d ", A[i * K + j]);
-            }
-            printf("\n");
-        }
-        printf("Матрица B:\n");
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < K; j++) {
-                printf("%d ", B[i * K + j]);
-            }
-            printf("\n");
-        }
+        A = calloc(count, sizeof(*A));
+        C = calloc(count, sizeof(*C));
+        counts = calloc(size, sizeof(*counts));
+        offsets = calloc(size, sizeof(*offsets));
+    }
+    if (!local_A || !local_C || !B || (rank == 0 && (!A || !C || !counts || !offsets))) {
+        fprintf(stderr, "Процесс %d не смог выделить память.\n", rank);
+        MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
 
-    // Рассылаем строки матрицы A всем процессам
-    MPI_Scatter(A, rows_per_proc * M, MPI_INT, local_A, rows_per_proc * M, MPI_INT, 0, MPI_COMM_WORLD);
-
-    // Передача матрицы B каждому процессу вручную
     if (rank == 0) {
-        for (int i = 1; i < size; i++) {
-            MPI_Send(B, M * K, MPI_INT, i, 0, MPI_COMM_WORLD);
+        srand((unsigned int)time(NULL));
+        for (int i = 0; i < count; i++) {
+            A[i] = rand() % 21;
+            B[i] = rand() % 21;
         }
-    } else {
-        MPI_Recv(B, M * K, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        int offset = 0;
+        for (int p = 0; p < size; p++) {
+            counts[p] = (rows_per_proc + (p < extra_rows)) * N;
+            offsets[p] = offset;
+            offset += counts[p];
+        }
     }
 
-    // Умножение локальных частей
-    multiply(local_A, B, local_C, rows_per_proc, M, K);
+    MPI_Scatterv(A, counts, offsets, MPI_INT, local_A, local_count, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(B, count, MPI_INT, 0, MPI_COMM_WORLD);
+    multiply(local_A, B, local_C, rows, N);
+    MPI_Gatherv(local_C, local_count, MPI_INT, C, counts, offsets, MPI_INT, 0, MPI_COMM_WORLD);
 
-    // Сборка результата
-    MPI_Gather(local_C, rows_per_proc * K, MPI_INT, C, rows_per_proc * K, MPI_INT, 0, MPI_COMM_WORLD);
-
-    // Вывод результата в процессе 0
+    int status = EXIT_SUCCESS;
     if (rank == 0) {
-        printf("Матрица C:\n");
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < K; j++) {
-                printf("%d ", C[i * K + j]);
-            }
-            printf("\n");
+        if (save_matrix("A.txt", A, N) && save_matrix("B.txt", B, N) && save_matrix("C.txt", C, N)) {
+            printf("Матрицы записаны в A.txt, B.txt и C.txt.\n");
+        } else {
+            status = EXIT_FAILURE;
         }
-        free(A);
-        free(C);
     }
+    MPI_Bcast(&status, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-    // Освобождаем память
+    free(offsets);
+    free(counts);
+    free(C);
+    free(A);
     free(local_A);
     free(B);
     free(local_C);
 
     MPI_Finalize();
-    return 0;
+    return status;
 }
